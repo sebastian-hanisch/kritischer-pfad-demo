@@ -86,15 +86,28 @@ Ein Plan ohne Kreise hat eine Reihenfolge, aber noch keine **Dauer**. Der **krit
 Alle anderen Aufgaben haben **Puffer**. Soweit die Lehrbuchrechnung (**CPM**). Sind die Dauern aber **unsicher**, stimmt sie in drei Punkten nicht mehr: Der Plan mit Erwartungswerten wird häufiger überschritten als gehalten,
 der kritische Pfad **wandert**, und ein Sicherheitszuschlag je Aufgabe plant weit mehr Puffer ein, als das Projekt braucht.
 
-Das ist das vierte Stück der Reihe **Ordnung und Abhängigkeit**; es setzt einen kreisfreien Plan voraus (Stücke 1 bis 3: **di-kreis-demo**, **alle-kreise-demo**, **kreise-aufloesen-demo**).
+Das ist die vierte Demo zum Thema **Ordnung und Abhängigkeit**; sie setzt einen kreisfreien Plan voraus (die ersten drei Demos: **di-kreis-demo**, **alle-kreise-demo**, **kreise-aufloesen-demo**).
 Wer zusätzlich knappe Ressourcen planen will, findet das in der Demo **rcpsp-demo**. Weiter unten: die Experimente **🔬**, **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
 """
 )
 
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/kritischer-pfad-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Stellen Sie sich ein Vorhaben mit mehreren Aufgabenketten vor, die an einem Termin zusammenlaufen. Nur die längste Kette bestimmt, wann das Vorhaben fertig ist: Das ist der **kritische Pfad**. Jede Verspätung auf ihm verschiebt das Ende. Alle anderen Aufgaben haben **Puffer**, also Zeit, um die sie sich verspäten dürfen, ohne das Ende zu verschieben.
+
+Sind die Dauern nur geschätzt, wird es schwieriger. Dort, wo Ketten zusammenlaufen, zählt die langsamere, und das macht das Vorhaben im Durchschnitt länger als der Plan mit den durchschnittlichen Dauern. Außerdem kann eine andere Kette die längste werden: Der kritische Pfad wandert. Die Demo würfelt die Dauern in vielen Durchläufen immer neu und zählt, wie oft der Plan hält und welche Aufgaben kritisch werden.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/kritischer-pfad-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
+
 with st.expander("So rechnet man den kritischen Pfad", expanded=True):
     st.markdown(
         """
-1. **Vorwärtslauf:** Jede Aufgabe startet, sobald alle Vorgänger fertig sind (**frühester Start**), und endet nach ihrer Dauer (**frühestes Ende**). Das späteste frühestes Ende ist die **Projektdauer**.
+1. **Vorwärtslauf:** Jede Aufgabe startet, sobald alle Vorgänger fertig sind (**frühester Start**), und endet nach ihrer Dauer (**frühestes Ende**). Das späteste der frühesten Enden ist die **Projektdauer**.
 2. **Rückwärtslauf:** Vom Projektende aus rückwärts: **spätestes Ende** und **spätester Start**, ohne das Projekt zu verlängern.
 3. **Puffer:** Der **Gesamtpuffer** (spätester minus frühester Start) ist die Verspätung, die eine Aufgabe verträgt, ohne das Projekt zu verlängern. Der **freie Puffer** lässt dabei auch alle Nachfolger unberührt. **Kritisch** heißt Gesamtpuffer null.
 4. **Unsicherheit:** Jede Dauer ist eine **Dreiecksverteilung** um die wahrscheinlichste Dauer. **Monte-Carlo** würfelt alle Dauern, rechnet den Vorwärtslauf und zählt: Projektdauer als Verteilung, **Quantile** (Sicherheit), **Kritikalitätsindex** (Anteil der Läufe, in denen die Aufgabe kritisch ist).
@@ -262,8 +275,8 @@ st.markdown(
 | **Unabhängige Dauern** | Sind Dauern korreliert (gleiches Team, gleiche Lieferung), streuen Projektdauer und Puffer stärker; die Demo würfelt jede Aufgabe für sich. | - |
 | **Dreiecksverteilung** | Echte Dauern haben andere Formen (lange Tails, Ausreißer); die Formen hier sind drei feste Beispiele. | - |
 | **Keine Ressourcen** | Teilen sich Aufgaben ein Team oder eine Maschine, ist der kritische Pfad nicht mehr nur ein Pfad der Abhängigkeiten. | rcpsp-demo |
-| **Keine Zeitabstände** | Mindest- und Höchstabstände zwischen Aufgaben (Anschlussfristen) kennt die Demo nicht; ein positiver Kreis darin wäre ein unmöglicher Plan. | Folgestück der Reihe |
-| **Kein Beschleunigen** | Dauern lassen sich hier nicht gegen Geld verkürzen; die Zeit-Kosten-Abwägung ist ein eigenes Problem. | Folgestück der Reihe |
+| **Keine Zeitabstände** | Mindest- und Höchstabstände zwischen Aufgaben (Anschlussfristen) kennt die Demo nicht; ein positiver Kreis darin wäre ein unmöglicher Plan. | bisher keine Demo |
+| **Kein Beschleunigen** | Dauern lassen sich hier nicht gegen Geld verkürzen; die Zeit-Kosten-Abwägung ist ein eigenes Problem. | bisher keine Demo |
 | **Synthetische Pläne** | Zufallspläne mit 1 bis 10 Tagen je Aufgabe; wie viele Aufgaben in echten Projekten kritisch sind, zeigt die Demo nicht. | - |
 | **Größe** | Bis {C.N_MAX} Aufgaben und {C.RUNS[-1]} Läufe; die Verzerrung wächst in den gemessenen Plänen nicht klar mit der Größe (Experiment 3). | - |
 """
@@ -272,6 +285,32 @@ st.markdown(
 st.markdown("---")
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/kritischer-pfad-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind ein Plan ohne Kreise mit den Dauern der Aufgaben und, für die Unsicherheit, zufällige Dauern um die wahrscheinlichste Dauer. Gesucht sind die Projektdauer, der Puffer jeder Aufgabe und der Unterschied zwischen dem Plan mit den durchschnittlichen Dauern und der mittleren Projektdauer der Läufe.
+
+| Symbol | Bedeutung |
+|---|---|
+| $G = (V, E)$ | kreisfreier Plan: Aufgaben $V$ und Beziehungen „A vor B“ $E$ |
+| $d_v$ | Dauer der Aufgabe $v$ |
+| $ES_v$, $EF_v$ | frühester Start und frühestes Ende von $v$ |
+| $LS_v$, $LF_v$ | spätester Start und spätestes Ende von $v$ |
+| $T$ | Projektdauer (längster Weg durch den Plan) |
+| $TF_v$ | Gesamtpuffer von $v$ (kritisch heißt $TF_v = 0$) |
+| $\ell_v$ | Länge des längsten Weges durch $v$ |
+| $t$, $\Delta T$ | Verspätung einer Aufgabe und Verschiebung des Projektendes |
+| $P$ | Pfad: eine Kette von Aufgaben im Plan |
+| $D_v$, $T(D)$ | zufällige Dauer von $v$ und zufällige Projektdauer |
+| $T(\mathbb{E}[D])$ | Projektdauer des Plans der Erwartungswerte |
+| $\mathbb{E}[\cdot]$ | Erwartungswert (Durchschnitt über sehr viele Läufe) |
+| $a$, $m$, $b$ | untere Grenze, wahrscheinlichste Dauer und obere Grenze der Dreiecksverteilung |
+| $\hat{\mu}$ | Erwartungswert nach der PERT-Dreipunktformel |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/kritischer-pfad-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Gegeben** ein kreisfreier Graph $G = (V, E)$ mit Dauern $d_v \ge 0$. Frühester Start $ES$, frühestes Ende $EF$, spätestes Ende $LF$ und spätester Start $LS$:

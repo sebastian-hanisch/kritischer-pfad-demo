@@ -3,9 +3,9 @@
 <!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
 **[→ Demo live ausprobieren](https://sebastianhanisch-kritischer-pfad-demo.streamlit.app/)** -->
 
-Viertes Stück der Reihe **Ordnung und Abhängigkeit** (Arbeitstitel der Linie `dag-abhaengigkeiten`) in der „Konzepte“-Reihe für die Website „Sebastian Hanisch – Operations Research und Machine Learning“, Bereich Graphentheorie. Setzt einen **kreisfreien** Plan voraus, wie ihn die Stücke 1 bis 3 liefern (`di-kreis-demo`, `alle-kreise-demo`, `kreise-aufloesen-demo`); derselbe Generator, dieselbe Nummerierung, hier ohne Widersprüche und mit Dauern. Vehikel: **Aufgabenabhängigkeiten** mit wahrscheinlichsten Dauern von 1 bis 10 Tagen und, für die Unsicherheit, Dreiecksverteilungen um diese Dauern. Die Demo fragt: Wie lange dauert das Vorhaben, welche Aufgaben sind **kritisch**, wie viel **Puffer** haben die übrigen, und was bedeutet das, wenn die Dauern unsicher sind?
+Vierte Demo zum Thema **Ordnung und Abhängigkeit** (Arbeitstitel der Linie `dag-abhaengigkeiten`) in der „Konzepte“-Reihe für die Website „Sebastian Hanisch – Operations Research und Machine Learning“, Bereich Graphentheorie. Setzt einen **kreisfreien** Plan voraus, wie ihn die ersten drei Demos dazu liefern (`di-kreis-demo`, `alle-kreise-demo`, `kreise-aufloesen-demo`); derselbe Generator, dieselbe Nummerierung, hier ohne Widersprüche und mit Dauern. Vehikel: **Aufgabenabhängigkeiten** mit wahrscheinlichsten Dauern von 1 bis 10 Tagen und, für die Unsicherheit, Dreiecksverteilungen um diese Dauern. Die Demo fragt: Wie lange dauert das Vorhaben, welche Aufgaben sind **kritisch**, wie viel **Puffer** haben die übrigen, und was bedeutet das, wenn die Dauern unsicher sind?
 
-Nachbarn: `rcpsp-demo` plant mit knappen Ressourcen (dort stehen CPM-Schranken nur als Handrechnung in einem Test); Zeitabstände zwischen Aufgaben und das Beschleunigen gegen Geld sind noch nicht gebaut.
+Nachbarn: `rcpsp-demo` plant mit knappen Ressourcen (dort stehen CPM-Schranken nur als Handrechnung in einem Test); Zeitabstände zwischen Aufgaben und das Beschleunigen gegen Geld gibt es bisher nicht als Demo.
 
 ## Warum dieses Problem
 
@@ -16,11 +16,11 @@ Die Lehrbuchrechnung (CPM) liefert eine Zahl und einen kritischen Pfad. Mit unsi
 - **Zahlen des Einzelplans neu gemessen.** Mit dem Demo-Code und den festen Plänen der Demo weichen die Werte der Vormessung leicht ab (andere Seeds): kritische Aufgaben 10 bis 18 % statt 8 bis 18 %, Verzerrung 0,1 / 0,9 / 5,2 % statt 0,2 / 1,5 / 4,8 %, Plan der Erwartungswerte eingehalten in 50 / 45 / 34 % statt 48 / 44 / 36 %, Puffer je Aufgabe 1,15-fach statt 1,16-fach. Die Aussagen bleiben.
 - **Korrektur zur Dichte.** Der Einzelplan hatte „nicht klar mit Größe **und Dichte**“. Gemessen: Mit der **Dichte sinkt** die Verzerrung (stark rechtsschiefe Dauern, 40 Aufgaben: 8,8 % bei Ausgangsgrad 1 gegen 3,8 % bei Grad 4); mit der **Plangröße** bleibt sie ungefähr gleich (4,9 % bei 20, 5,5 % bei 80 Aufgaben).
 - **Neu gegenüber dem Plan:** der Plan der **wahrscheinlichsten Dauern** wird bei schiefen Dauern fast nie gehalten (1 % bzw. 0 % der Läufe), und die PERT-Dreipunktformel liegt auf Dreiecksverteilungen schon für eine einzelne Aufgabe 7 bis 17 % unter dem Erwartungswert (Experiment 6). Die Demo trennt diesen Fehler vom Merge-Effekt.
-- **Zeitabstände und Beschleunigen** sind, wie im Einzelplan vorgeschlagen, nicht Teil dieses Stücks.
+- **Zeitabstände und Beschleunigen** sind, wie im Einzelplan vorgeschlagen, nicht Teil dieser Demo.
 
 ## Modell
 
-Plan wie in den Stücken 1 bis 3 (Aufgaben mit zufälligen Nummern, Beziehungen „A vor B“, hier ohne Widersprüche, also ein DAG), dazu eine **wahrscheinlichste Dauer** je Aufgabe (ganze Tage von 1 bis 10, fest aus dem Zufalls-Seed). Unsicherheit: Dreiecksverteilung mit Gipfel bei der wahrscheinlichsten Dauer und den Grenzen als Faktoren davon: **symmetrisch** 0,8 / 1 / 1,2, **rechtsschief** 0,7 / 1 / 1,8, **stark rechtsschief** 0,5 / 1 / 3. Dauern sind **unabhängig**. Der Zufall kommt nur aus `random.Random(seed)` mit `random()` und `triangular()` (plattformstabil). Details und Formeln: Expander „📐 Mathematische Formulierung“ in der App.
+Plan wie in den ersten drei Demos zum Thema (Aufgaben mit zufälligen Nummern, Beziehungen „A vor B“, hier ohne Widersprüche, also ein DAG), dazu eine **wahrscheinlichste Dauer** je Aufgabe (ganze Tage von 1 bis 10, fest aus dem Zufalls-Seed). Unsicherheit: Dreiecksverteilung mit Gipfel bei der wahrscheinlichsten Dauer und den Grenzen als Faktoren davon: **symmetrisch** 0,8 / 1 / 1,2, **rechtsschief** 0,7 / 1 / 1,8, **stark rechtsschief** 0,5 / 1 / 3. Dauern sind **unabhängig**. Der Zufall kommt nur aus `random.Random(seed)` mit `random()` und `triangular()` (plattformstabil). Details und Formeln: Expander „📐 Mathematische Formulierung“ in der App.
 
 ## Methodik
 
@@ -39,9 +39,9 @@ Alle Zahlen stehen in `tests/test_claims.py`; Mediane über feste Pläne, nie ei
 | Wie viele Aufgaben sind kritisch? (60 Aufgaben, 30 Pläne je Dichte) | Bei Ausgangsgrad 1 / 2 / 3 im Median nur **10 / 13,3 / 18,3 %** der Aufgaben, auf **einem** kritischen Pfad (höchstens 4 / 2 / 3); **freien Puffer null** haben dagegen **43,3 / 51,7 / 55 %**: kein freier Puffer heißt nicht kritisch. Gesamtpuffer im Median 16 / 16,75 / 11,5 Tage. |
 | Wird der Plan gehalten? (40 Aufgaben, Grad 2, 15 Pläne mit je 1 000 Läufen) | Plan der **Erwartungswerte** eingehalten in **50 / 45 / 34 %** der Läufe (symmetrisch / rechtsschief / stark rechtsschief); Plan der **wahrscheinlichsten Dauern** in **50 / 1 / 0 %**; Plan mit PERT-Formel in 50 / 13 / 3 %. |
 | Wie groß ist die Merge-Verzerrung? | Der Erwartungswert der Projektdauer liegt im Median **0,1 / 0,9 / 5,2 %** über dem Plan der Erwartungswerte (im ungünstigsten Plan bis 1,6 / 5,9 / 13,5 %). |
-| Hängt sie an Dichte und Größe? (stark rechtsschief, 15 Pläne je Fall) | Mit der Dichte **sinkt** sie: 40 Aufgaben, Grad 1 / 2 / 3 / 4: **8,8 / 4,7 / 4,7 / 3,8 %**; mit der Größe bleibt sie ungefähr gleich: Grad 2, n = 20 / 40 / 80: **4,9 / 4,7 / 5,5 %**. Der Plan der Erwartungswerte wird in allen Fällen nur in 29 bis 40 % der Läufe gehalten. |
+| Hängt sie an Dichte und Größe? (stark rechtsschief, 15 Pläne je Fall mit je 800 Läufen) | Mit der Dichte **sinkt** sie: 40 Aufgaben, Grad 1 / 2 / 3 / 4: **8,8 / 4,7 / 4,7 / 3,8 %**; mit der Größe bleibt sie ungefähr gleich: Grad 2, n = 20 / 40 / 80: **4,9 / 4,7 / 5,5 %**. Der Plan der Erwartungswerte wird in allen Fällen nur in 29 bis 40 % der Läufe gehalten. |
 | Wandert der kritische Pfad? (40 Aufgaben, 15 Pläne, 400 Läufe, rechtsschief) | Von **468** Aufgaben mit Puffer größer null sind **114 (24 %)** in einzelnen Läufen kritisch, **41 (9 %)** in mindestens 10 % der Läufe; von **132** deterministisch kritischen Aufgaben sind **12** in weniger als der Hälfte der Läufe kritisch. |
-| Puffer je Aufgabe oder Projektpuffer? (40 Aufgaben, 15 Pläne, stark rechtsschief) | Jede Aufgabe mit ihrem 80 %-Quantil geplant ergibt im Median das **1,15-fache** des echten Projekt-80 %-Quantils (1,10 bis 1,20); der nötige Projektpuffer beträgt **16,2 %** über dem Plan der Erwartungswerte. |
+| Puffer je Aufgabe oder Projektpuffer? (40 Aufgaben, 15 Pläne mit je 1 000 Läufen, stark rechtsschief) | Jede Aufgabe mit ihrem 80 %-Quantil geplant ergibt im Median das **1,15-fache** des echten Projekt-80 %-Quantils (1,10 bis 1,20); der nötige Projektpuffer beträgt **16,2 %** über dem Plan der Erwartungswerte. |
 | Wie gut ist die PERT-Dreipunktformel? | Gegen den Erwartungswert der Dreiecksverteilung (als Vielfaches der wahrscheinlichsten Dauer): symmetrisch 1 gegen 1 (0 %), rechtsschief **1,083 gegen 1,167 (−7,1 %)**, stark rechtsschief **1,25 gegen 1,5 (−16,7 %)**. |
 | Ist die Rechnung korrekt? | Projektdauer gleich dem längsten Weg nach Aufzählung aller Pfade und nach `networkx` auf **160** festen Plänen und gleich der Lösung eines linearen Programms (`scipy`, **60** Pläne); Gesamtpuffer gleich Projektdauer minus längster Weg durch die Aufgabe (**120** Pläne); Verspätungssatz auf 100 Plänen. `tests/test_oracle_kritischer_pfad.py` |
 
@@ -51,7 +51,7 @@ Alle Zahlen stehen in `tests/test_claims.py`; Mediane über feste Pläne, nie ei
 - **Dreiecksverteilung mit drei festen Formen.** Echte Dauern haben andere Formen; die Zahlen gelten für diese Beispiele.
 - **Keine Ressourcen, keine Zeitabstände, kein Beschleunigen.** Der kritische Pfad ist hier nur ein Pfad der Abhängigkeiten.
 - **Synthetische Pläne** mit 1 bis 10 Tagen je Aufgabe; wie viele Aufgaben in echten Projekten kritisch sind, zeigt die Demo nicht.
-- **Verzerrung hier klein bis mäßig:** bis 5,2 % im Median, bei einzelnen Plänen über 13 %. Die Demo behauptet nicht, dass PERT in der Praxis um ein bestimmtes Maß zu optimistisch ist; sie misst nur diesen Effekt unter diesen Annahmen.
+- **Verzerrung hier klein bis mäßig:** im Median je nach Anordnung von 0,1 bis 8,8 % (5,2 % bei 40 Aufgaben und Grad 2 in Experiment 2, 8,8 % bei Grad 1 in Experiment 3, dort mit anderen Plänen und Läufen), bei einzelnen Plänen über 13 %. Dass der Plan der Erwartungswerte in weniger als der Hälfte der Läufe hält (50 / 45 / 34 %), kann am Zusammenlaufen der Pfade und an der Schiefe der Dauern liegen; die Demo trennt beide Ursachen nicht. Die Demo behauptet nicht, dass PERT in der Praxis um ein bestimmtes Maß zu optimistisch ist; sie misst nur diesen Effekt unter diesen Annahmen.
 - **Größe:** bis 80 Aufgaben und 5 000 Läufe.
 
 ## Tests
@@ -78,7 +78,7 @@ Das Verzeichnis `tests/` enthält zurzeit 123 Tests (Laufzeit unter einer Minute
 | `kpf_experiments.py` | Experimente über feste Pläne |
 | `kpf_layout.py` | Fester Kopf (Stylesheet) |
 | `kpf_presets.py` | Permalink, Presets (Schnellstart in der Seitenleiste, aktives Preset hervorgehoben), Zufalls-Seed-Button |
-| `kpf_scenario.py` | Pläne mit verdeckter Wunschreihenfolge (derselbe Generator wie in den Stücken 1 bis 3) und Dauern |
+| `kpf_scenario.py` | Pläne mit verdeckter Wunschreihenfolge (derselbe Generator wie in den ersten drei Demos zum Thema) und Dauern |
 | `kpf_visualization.py` | Plotly-Abbildungen (Gantt, Bogendiagramm, Puffer, Histogramm, Experimente; Achsen gesperrt) |
 | `requirements-dev.txt` | Laufzeit plus pytest, networkx und scipy (Gegenproben) |
 | `requirements.txt` | Laufzeit-Bibliotheken (ungepinnt) |
@@ -86,7 +86,7 @@ Das Verzeichnis `tests/` enthält zurzeit 123 Tests (Laufzeit unter einer Minute
 
 ## Bewusst nicht umgesetzt
 
-- **Zeitabstände zwischen Aufgaben** (Mindest- und Höchstabstände, positive Kreise als unmöglicher Plan) und **Zeit-Kosten-Abwägung** (Beschleunigen): eigene Stücke der Reihe.
+- **Zeitabstände zwischen Aufgaben** (Mindest- und Höchstabstände, positive Kreise als unmöglicher Plan) und **Zeit-Kosten-Abwägung** (Beschleunigen): eigene Demos zum Thema (bisher keine).
 - **Ressourcenbeschränkungen:** `rcpsp-demo`.
 - **Korrelierte Dauern, andere Verteilungen, Beta-PERT-Sampling:** nicht Thema; die Dreipunktformel kommt nur als Befund vor.
 - **Echte Pläne oder Dateiimport:** die Pläne sind synthetisch.
